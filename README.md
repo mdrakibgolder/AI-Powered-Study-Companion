@@ -5,7 +5,7 @@ An intelligent, personalized study assistant that helps university students lear
 ![Next.js](https://img.shields.io/badge/Next.js-15-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
-![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-green)
+![DeepSeek](https://img.shields.io/badge/DeepSeek-AI-green)
 
 ## ✨ Features
 
@@ -54,8 +54,8 @@ An intelligent, personalized study assistant that helps university students lear
 - **NextAuth.js** - Authentication
 
 ### AI & Processing
-- **OpenAI GPT-4** - Text generation and summarization
-- **OpenAI Embeddings** - Vector embeddings (text-embedding-3-small)
+- **DeepSeek Chat** - Text generation and summarization
+- **DeepSeek Embeddings** - Vector embeddings for RAG
 - **RAG Implementation** - Custom retrieval system
 - **pdf-parse** - PDF text extraction
 - **mammoth** - DOCX processing
@@ -65,7 +65,7 @@ An intelligent, personalized study assistant that helps university students lear
 ### Prerequisites
 - Node.js 18+ and npm
 - PostgreSQL database
-- OpenAI API key
+- DeepSeek API key
 
 ### Step 1: Clone the Repository
 ```bash
@@ -89,8 +89,8 @@ DATABASE_URL="postgresql://postgres:password@localhost:5432/study_companion?sche
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-super-secret-key-change-this-in-production"
 
-# OpenAI
-OPENAI_API_KEY="sk-proj-your-api-key-here"
+# DeepSeek AI
+DEEPSEEK_API_KEY="sk-19e0cfa7ee68480198fc4698afa72e1a"
 
 # File Upload
 MAX_FILE_SIZE=10485760
@@ -191,10 +191,10 @@ ai-study-companion/
 ### RAG System Architecture
 1. **Document Upload**: Files are processed and text is extracted
 2. **Chunking**: Content is split into 1000-character chunks
-3. **Embedding**: Each chunk is converted to vector embeddings
+3. **Embedding**: Each chunk is converted to vector embeddings using DeepSeek
 4. **Storage**: Embeddings stored in PostgreSQL
 5. **Retrieval**: Query is embedded and similar chunks are found
-6. **Generation**: GPT-4 generates answer from relevant chunks
+6. **Generation**: DeepSeek Chat generates answer from relevant chunks
 
 ### Database Schema
 - **Users**: Authentication and user data
@@ -269,11 +269,11 @@ ai-study-companion/
 # Run: npx prisma db push
 ```
 
-### OpenAI API Errors
+### DeepSeek API Errors
 ```bash
-# Verify OPENAI_API_KEY in .env
-# Check API quota and billing
-# Ensure model access (gpt-4, text-embedding-3-small)
+# Verify DEEPSEEK_API_KEY in .env
+# Check API quota and billing at https://platform.deepseek.com/
+# Ensure model access (deepseek-chat, deepseek-embedding)
 ```
 
 ### File Upload Failures
@@ -301,7 +301,7 @@ Built with ❤️ for students who want to study smarter, not harder.
 
 ## 🙏 Acknowledgments
 
-- OpenAI for GPT-4 and embeddings API
+- DeepSeek for powerful AI models and embeddings API
 - Vercel for Next.js framework
 - shadcn for beautiful UI components
 - Prisma team for the amazing ORM

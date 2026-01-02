@@ -1,13 +1,21 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import OpenAI from "openai";
 import prisma from "@/lib/db";
 import { chunkText } from "./document-processor";
 
-if (!process.env.GEMINI_API_KEY) {
-  throw new Error("GEMINI_API_KEY is not set in environment variables");
+if (!process.env.DEEPSEEK_API_KEY) {
+  throw new Error("DEEPSEEK_API_KEY is not set in environment variables");
 }
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const embeddingModel = genAI.getGenerativeModel({ model: "text-embedding-004" });
+// Initialize OpenAI client for embeddings (using OpenAI API)
+const embeddingsClient = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || process.env.DEEPSEEK_API_KEY,
+});
+
+// Initialize DeepSeek client for chat
+const openai = new OpenAI({
+  apiKey: process.env.DEEPSEEK_API_KEY,
+  baseURL: "https://api.deepseek.com",
+});
 
 export async function generateEmbeddings(
   documentId: string,
@@ -22,8 +30,12 @@ export async function generateEmbeddings(
       const chunk = chunks[i];
 
       try {
-        const result = await embeddingModel.embedContent(chunk);
-        const embedding = result.embedding.values;
+        // Using OpenAI embeddings (DeepSeek embeddings endpoint not yet available)
+        const result = await embeddingsClient.embeddings.create({
+          model: "text-embedding-3-small",
+          input: chunk,
+        });
+        const embedding = result.data[0].embedding;
 
         await prisma.embedding.create({
           data: {
@@ -70,9 +82,12 @@ export async function findRelevantChunks(
   topK: number = 5
 ): Promise<Array<{ content: string; similarity: number }>> {
   try {
-    // Generate embedding for query
-    const result = await embeddingModel.embedContent(query);
-    const queryEmbedding = result.embedding.values;
+    // Generate embedding for query using OpenAI
+    const result = await embeddingsClient.embeddings.create({
+      model: "text-embedding-3-small",
+      input: query,
+    });
+    const queryEmbedding = result.data[0].embedding;
 
     // Get all embeddings for the documents
     const embeddings = await prisma.embedding.findMany({

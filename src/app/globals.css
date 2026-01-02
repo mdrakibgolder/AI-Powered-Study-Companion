@@ -67,3 +67,66 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Chat Message Styling */
+.chat-message-content {
+  @apply text-sm leading-relaxed;
+}
+
+.chat-message-content p {
+  @apply mb-2 last:mb-0;
+}
+
+.chat-message-content ul,
+.chat-message-content ol {
+  @apply my-2 pl-4 space-y-1;
+}
+
+.chat-message-content li {
+  @apply text-sm;
+}
+
+.chat-message-content code {
+  @apply px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-purple-600 dark:text-purple-400 font-mono text-xs;
+}
+
+.chat-message-content pre {
+  @apply my-2 p-3 rounded-lg bg-gray-900 dark:bg-black overflow-x-auto;
+}
+
+.chat-message-content pre code {
+  @apply bg-transparent text-gray-100 p-0;
+}
+
+.chat-message-content strong {
+  @apply font-semibold text-gray-900 dark:text-white;
+}
+
+.chat-message-content a {
+  @apply text-blue-600 dark:text-blue-400 hover:underline;
+}
+
+.chat-message-content blockquote {
+  @apply border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic my-2;
+}
+
+/* Smooth scrolling for chat */
+.chat-messages-container {
+  scroll-behavior: smooth;
+}
+
+/* Fade-in animation for messages */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-animate {
+  animation: fadeInUp 0.3s ease-out;
+}
