@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  password      String
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  documents     Document[]
+  conversations Conversation[]
+  questions     Question[]
+
+  @@map("users")
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  title       String
+  filename    String
+  filepath    String
+  fileType    String
+  fileSize    Int
+  subject     String?
+  description String?
+  content     String
+  summary     String?
+  uploadedAt  DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  embeddings Embedding[]
+  messages   Message[]
+
+  @@index([userId])
+  @@map("documents")
+}
+
+model Embedding {
+  id         String   @id @default(cuid())
+  content    String
+  embedding  String   // Store as JSON string for SQLite
+  metadata   String?  // Store as JSON string for SQLite
+  createdAt  DateTime @default(now())
+
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@map("embeddings")
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  title     String   @default("New Conversation")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  messages Message[]
+
+  @@index([userId])
+  @@map("conversations")
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  role      String
+  content   String
+  createdAt DateTime @default(now())
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id], onDelete: SetNull)
+
+  @@index([conversationId])
+  @@index([documentId])
+  @@map("messages")
+}
+
+model Question {
+  id         String   @id @default(cuid())
+  question   String
+  options    String   // Store as JSON string for SQLite
+  answer     String
+  difficulty String   @default("medium")
+  subject    String?
+  createdAt  DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("questions")
+}
